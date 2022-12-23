@@ -15,7 +15,7 @@ class UserService {
       throw new Error(`User with this email (${email}) already exists`);
     }
 
-    const hashPassword = bcrypt.hash(password, 3);
+    const hashPassword = await bcrypt.hash(password, 3);
     const activationLink = uuid.v4();
 
     const user = await UserModel.create({email, password: hashPassword, activationLink});
