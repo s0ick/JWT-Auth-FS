@@ -9,7 +9,7 @@ class TokenService {
     return {
       accessToken, refreshToken
     };
-  }
+  };
 
   async saveToken(userId, refreshToken) {
     const tokenData = await TokenModel.findOne({user: userId});
@@ -20,7 +20,7 @@ class TokenService {
     }
 
     return await TokenModel.create({user: userId, refreshToken});
-  }
+  };
 }
 
 module.exports = new TokenService();

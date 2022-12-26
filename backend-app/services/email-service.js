@@ -11,7 +11,7 @@ class EmailService {
         pass: process.env.SMPT_PASSWORD
       }
     });
-  }
+  };
 
   async sendActivationEmail(to, link) {
     await this.transporter.sendMail({
@@ -27,7 +27,7 @@ class EmailService {
           </div>
         `
     });
-  }
+  };
 }
 
 module.exports = new EmailService();

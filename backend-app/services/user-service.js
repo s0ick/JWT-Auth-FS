@@ -30,7 +30,7 @@ class UserService {
       ...tokens,
       user: userDto
     };
-  }
+  };
 
   async activate(activationLink) {
     const user = await UserModel.findOne({activationLink});
@@ -41,7 +41,11 @@ class UserService {
 
     user.isActivate = true;
     await user.save();
-  }
+  };
+
+  async login(email, password) {
+
+  };
 }
 
 module.exports = new UserService();

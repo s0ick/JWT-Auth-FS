@@ -20,8 +20,7 @@ class UserController {
     } catch (e) {
       next(e);
     }
-
-  }
+  };
 
   async login(req, res, next) {
     try {
@@ -33,8 +32,7 @@ class UserController {
     } catch (e) {
       next(e);
     }
-
-  }
+  };
 
   async logout(req, res, next) {
     try {
@@ -42,8 +40,7 @@ class UserController {
     } catch (e) {
       next(e);
     }
-
-  }
+  };
 
   async activateLink(req, res, next) {
     try {
@@ -53,8 +50,7 @@ class UserController {
     } catch (e) {
       next(e);
     }
-
-  }
+  };
 
   async refreshToken(req, res, next) {
     try {
@@ -62,8 +58,7 @@ class UserController {
     } catch (e) {
       next(e);
     }
-
-  }
+  };
 
   async getUsers(req, res, next) {
     try {
@@ -71,8 +66,7 @@ class UserController {
     } catch (e) {
       next(e);
     }
-
-  }
+  };
 }
 
 module.exports = new UserController();
