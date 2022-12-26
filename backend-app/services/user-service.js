@@ -69,6 +69,34 @@ class UserService {
   async logout(refreshToken) {
     return await TokenService.removeToken(refreshToken);
   };
+
+  async refresh(refreshToken) {
+    if (!refreshToken) {
+      throw ApiError.UnauthorizedError();
+    }
+
+    const userData = TokenService.validateRefreshToken(refreshToken);
+    const tokenFormDataBase = await TokenService.findToken(refreshToken);
+
+    if (!userData || !tokenFormDataBase) {
+      throw ApiError.UnauthorizedError();
+    }
+
+    const user = await UserModel.findById(userData.id);
+
+    const userDto = new UserDto(user);
+    const tokens = TokenService.generateTokens({...userDto});
+    await TokenService.saveToken(userDto.id, tokens.refreshToken);
+
+    return {
+      ...tokens,
+      user: userDto
+    };
+  };
+
+  async getAllUsers() {
+   return await UserModel.find();
+  };
 }
 
 module.exports = new UserService();

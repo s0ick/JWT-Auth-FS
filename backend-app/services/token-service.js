@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+
 const TokenModel = require('../models/token-model');
 
 class TokenService {
@@ -9,6 +10,22 @@ class TokenService {
     return {
       accessToken, refreshToken
     };
+  };
+
+  validateAccessToken(token) {
+    try {
+      return jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
+    } catch (e) {
+      return null;
+    }
+  };
+
+  validateRefreshToken(token) {
+    try {
+      return jwt.verify(token, process.env.JWT_REFRESH_TOKEN);
+    } catch (e) {
+      return null;
+    }
   };
 
   async saveToken(userId, refreshToken) {
@@ -26,6 +43,9 @@ class TokenService {
     return await TokenModel.deleteOne({refreshToken});
   };
 
+  async findToken(refreshToken) {
+    return await TokenModel.findOne({refreshToken});
+  };
 }
 
 module.exports = new TokenService();
