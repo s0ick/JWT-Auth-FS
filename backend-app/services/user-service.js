@@ -3,6 +3,7 @@ const uuid = require('uuid');
 
 const UserModel = require('../models/user-model');
 const UserDto = require('../dtos/user-dto');
+const ApiError = require('../exceptions/api-error');
 
 const EmailService = require('./email-service');
 const TokenService = require('./token-service');
@@ -12,7 +13,7 @@ class UserService {
     const condidate = await UserModel.findOne({email});
 
     if (condidate) {
-      throw new Error(`User with this email (${email}) already exists`);
+      throw ApiError.BadRequest(`User with this email (${email}) already exists`);
     }
 
     const hashPassword = await bcrypt.hash(password, 3);
@@ -35,7 +36,7 @@ class UserService {
     const user = await UserModel.findOne({activationLink});
 
     if (!user) {
-      throw new Error('User not found');
+      throw ApiError.BadRequest('User not found');
     }
 
     user.isActivate = true;
