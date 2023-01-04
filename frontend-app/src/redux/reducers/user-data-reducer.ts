@@ -1,0 +1,36 @@
+import {createSlice} from '@reduxjs/toolkit';
+
+const userDataSlice = createSlice({
+  name: 'user-data-slice',
+  initialState: {
+    isFetching: false,
+    isDone: false,
+    payload: null
+  },
+  reducers: {
+    request: state => {
+      state.isFetching = true;
+      state.isDone = false;
+      state.payload = null;
+    },
+    receive: (state, action) => {
+      state.isFetching = false;
+      state.isDone = true;
+      state.payload = action.payload;
+    },
+    cancel: state => {
+      state.isFetching = false;
+      state.isDone = false;
+      state.payload = null;
+    }
+  }
+});
+
+export const {
+  actions: {
+    request,
+    receive,
+    cancel
+  },
+  reducer: userDataReducer
+} = userDataSlice;
