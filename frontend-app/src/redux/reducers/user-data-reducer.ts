@@ -1,11 +1,15 @@
 import {createSlice} from '@reduxjs/toolkit';
 
+import {Endpoints, Methods} from '../../utils/constants';
+import {IDynamicBody} from '../../types/models';
+import {callAbortableApi} from '../../api/api';
+
 const userDataSlice = createSlice({
   name: 'user-data-slice',
   initialState: {
     isFetching: false,
     isDone: false,
-    payload: null
+    payload: null,
   },
   reducers: {
     request: state => {
@@ -22,8 +26,7 @@ const userDataSlice = createSlice({
       state.isFetching = false;
       state.isDone = false;
       state.payload = null;
-    }
-  }
+  }}
 });
 
 export const {
@@ -34,3 +37,13 @@ export const {
   },
   reducer: userDataReducer
 } = userDataSlice;
+
+export const authUser = (payload: IDynamicBody | undefined, endpoint: Endpoints, method: Methods) => callAbortableApi(
+  request,
+  receive,
+  cancel,
+  method,
+  endpoint,
+  payload,
+  `${endpoint} User`
+);

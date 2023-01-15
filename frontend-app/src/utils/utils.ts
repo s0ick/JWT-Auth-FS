@@ -1,4 +1,6 @@
-export const uuid = () => {
+import {IErrors} from '../types/models';
+
+export const uuid = (): string => {
   const mask = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
   let dt = new Date().getTime();
 
@@ -8,3 +10,13 @@ export const uuid = () => {
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
   });
 };
+
+export const formatErrorsArray = (errors: Array<IErrors>): Array<string> | string => {
+  if (errors.length === 1) {
+    return errors[0].msg
+  }
+
+  const messages: Array<string> = [];
+  errors.forEach(e => messages.push(e.msg));
+  return messages;
+}

@@ -7,7 +7,7 @@ import {NotificationItem} from '../../styled/ui-components';
 interface NotificationProps {
   dispatch: (props: any) => any,
   type: string,
-  message: string,
+  message: string | Array<string>,
   id: string,
   title?: string,
   delay?: number
@@ -20,6 +20,8 @@ export const Notifications: FC<NotificationProps> = memo(({
   const [exit, setExit] = useState<boolean>(false);
   const [width, setWidth] = useState<number>(0);
   const [intervalID, setIntervalID] = useState<NodeJS.Timer>(setInterval(() => {}, 0));
+
+  const isList = Array.isArray(message);
 
   const handleStartTimer = useCallback(() => {
     const intervalId = setInterval(() => {
@@ -63,11 +65,17 @@ export const Notifications: FC<NotificationProps> = memo(({
     <NotificationItem
       onMouseEnter={handlePauseTimer}
       onMouseLeave={handleStartTimer}
+      onClick={handleCloseNotification}
       isSuccess={type === 'SUCCESS'}
       exit={exit}
     >
       {title && <h3>{title}</h3>}
-      <p>{message}</p>
+      {!isList && <p>{message}</p>}
+      {isList &&
+        <ul>
+          {message.map((el, index) => <li key={`note_${id}_${index}`}>{el}</li>)}
+        </ul>
+      }
       <div style={{width: `${width}%`}} />
     </NotificationItem>
   );

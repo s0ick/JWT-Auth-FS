@@ -19,3 +19,13 @@ export const slideRight = keyframes`
     margin-left: 120%;
   }
 `;
+
+export const ldsRing = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+`;

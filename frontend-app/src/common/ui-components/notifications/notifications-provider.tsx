@@ -20,7 +20,7 @@ interface ActionProps {
 
 interface NoteProps {
   type: string,
-  message: string,
+  message: string | Array<string>,
   id: string,
   title?: string
   delay?: number
@@ -28,7 +28,7 @@ interface NoteProps {
 
 interface NotificationProps {
   type: string,
-  message: string,
+  message: string | Array<string>,
   title?: string,
   delay?: number
 }

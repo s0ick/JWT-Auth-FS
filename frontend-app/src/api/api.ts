@@ -1,25 +1,28 @@
-import axios from 'axios';
+import axios, {AxiosError, AxiosResponse} from 'axios';
+import {AnyAction} from 'redux';
 
-import {IAuthResponse} from '../types/models';
+import {IAbortController, IAuthResponse, IAxiosError, IDynamicBody} from '../types/models';
+import {API_URL, NotificationTypes} from '../utils/constants';
+import {setAlert} from '../redux/reducers/alert-reducer';
+import {formatErrorsArray} from '../utils/utils';
+import {AppDispatch} from '../redux/store';
 
-export const API_URL = `http://localhost:5000/api`;
-
-const abortControllers = {common: null};
+const abortControllers: IAbortController = {common: null};
 
 const $api = axios.create({
   withCredentials: true,
   baseURL: API_URL
-})
-
-$api.interceptors.request.use((config) => {
-  if (config.headers) {
-    config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
-  }
-  return config;
 });
 
-$api.interceptors.response.use((config) => {
-  return config;
+$api.interceptors.request.use((request) => {
+  if (request.headers) {
+    request.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+  }
+  return request;
+});
+
+$api.interceptors.response.use((response) => {
+  return response;
 },async (error) => {
   const originalRequest = error.config;
   if (error.response.status == 401 && error.config && !error.config._isRetry) {
@@ -36,3 +39,68 @@ $api.interceptors.response.use((config) => {
 });
 
 export default $api;
+
+const _handleAbortableRequestError = (
+  error: AxiosError,
+  dispatch: AppDispatch,
+  abortActionCreator: () => AnyAction
+) => {
+  dispatch(abortActionCreator());
+
+  if (axios.isAxiosError(error) && error.response) {
+    const title = (error.response?.data as IAxiosError).message;
+    const message = formatErrorsArray((error.response?.data as IAxiosError).errors) ;
+
+    return dispatch(setAlert({
+      type: NotificationTypes.ERR,
+      title,
+      message,
+      delay: 30
+    }));
+  }
+
+  return dispatch(setAlert({
+    type: NotificationTypes.ERR,
+    title: 'Unpredictable error',
+    message: 'We are already working on fixing it',
+    delay: 30
+  }));
+};
+
+export const callAbortableApi = (
+  requestActionCreator: () => AnyAction,
+  receiveActionCreator: (body: AxiosResponse) => AnyAction,
+  abortActionCreator: () => AnyAction,
+  method: string,
+  endpoint: string,
+  payload: undefined | IDynamicBody,
+  controllerName: string = 'common'
+) => (dispatch: AppDispatch) => {
+  const abortController = abortControllers[controllerName];
+
+  if (abortController) {
+    abortController.abort();
+  }
+
+  const controller = new AbortController();
+  abortControllers[controllerName] = controller;
+  dispatch(requestActionCreator());
+
+  return $api.request({
+    url: endpoint,
+    method,
+    data: payload,
+    signal: controller.signal
+  })
+  .then((response: AxiosResponse) => {
+    abortControllers[controllerName] = null;
+    const {accessToken, refreshToken, ...payload} = response.data;
+
+    if (accessToken) {
+      localStorage.setItem('token', accessToken);
+    }
+
+    return dispatch(receiveActionCreator(payload));
+  })
+  .catch(e => _handleAbortableRequestError(e, dispatch, abortActionCreator));
+};

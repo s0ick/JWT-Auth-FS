@@ -9,8 +9,14 @@ const router = new Router();
 
 router.post(
   '/registration',
-  body('email').isEmail(),
-  body('password').isLength({min: 4, max: 32}),
+  body('email')
+    .isEmail()
+    .withMessage('Wrong email address')
+  ,
+  body('password')
+    .isLength({min: 4, max: 32})
+    .withMessage('Password must be at least 4 characters and not more than 32')
+  ,
   UserController.registration
 );
 router.post('/login', UserController.login);

@@ -1,28 +1,16 @@
-import {composeWithDevTools} from 'redux-devtools-extension';
-import {createEpicMiddleware} from 'redux-observable';
-import {applyMiddleware, createStore} from 'redux';
+import {configureStore} from '@reduxjs/toolkit';
 import thunkMiddleware from 'redux-thunk';
 import logger from 'redux-logger';
+import {useDispatch} from 'react-redux';
 
 import {rootReducer} from './reducers/index.reducer';
-import {rootEpic} from './epics/index.epic';
 
-const epicMiddleware = createEpicMiddleware();
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([logger, thunkMiddleware])
+});
 
-const middlewares = [
-  thunkMiddleware,
-  logger,
-  epicMiddleware
-].filter(m => !!m);
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
 
-export const store = createStore(
-  rootReducer,
-  undefined,
-  composeWithDevTools(
-    applyMiddleware(
-      ...middlewares
-    )
-  )
-);
-
-epicMiddleware.run(rootEpic);
+export const useAppDispatch = () => useDispatch<AppDispatch>();

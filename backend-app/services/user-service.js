@@ -13,7 +13,7 @@ class UserService {
     const condidate = await UserModel.findOne({email});
 
     if (condidate) {
-      throw ApiError.BadRequest(`User with this email (${email}) already exists`);
+      throw ApiError.BadRequest('Invalid value', [{msg: `User with this email (${email}) already exists`}]);
     }
 
     const hashPassword = await bcrypt.hash(password, 3);
@@ -79,6 +79,7 @@ class UserService {
     const tokenFormDataBase = await TokenService.findToken(refreshToken);
 
     if (!userData || !tokenFormDataBase) {
+      console.log(userData, tokenFormDataBase);
       throw ApiError.UnauthorizedError();
     }
 

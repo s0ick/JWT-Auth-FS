@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import {NotificationsStylesProps} from '../../types/ui-models';
 
-import {slideLeft, slideRight} from './animations';
+import {ldsRing, slideLeft, slideRight} from './animations';
 import {
   ACTION_COLOR,
   ACTION_HOVER_COLOR,
@@ -10,7 +10,7 @@ import {
   TEXT_COLOR,
   ERROR,
   SUCCESS,
-  SECONDARY_BACKGROUND
+  SECONDARY_BACKGROUND, HOVER_BACKGROUND
 } from './color-constants';
 
 export const AppPageWrapper = styled.div`
@@ -68,12 +68,22 @@ export const AppInputField = styled.input`
   }
 `;
 
-export const AppButton = styled.button`
+export interface IAppButton {
+  isFetching?: boolean
+}
+
+export const AppButton = styled.div<IAppButton>`
   border: none;
   background: none;
+  
+  width: 200px;
+  height: 50px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   border-radius: 16px;
-  padding: 12px 30px;
 
   font-size: 18px;
   letter-spacing: 2px;
@@ -82,6 +92,11 @@ export const AppButton = styled.button`
   color: ${TEXT_COLOR};
 
   transition: background-color .35s;
+
+  span {
+    margin-left: ${props => props.isFetching ? '5px' : '0'};
+    transition: margin-left .35s;
+  }
 
   :hover {
     cursor: pointer;
@@ -120,7 +135,6 @@ export const NotificationItem = styled.div<NotificationsStylesProps>`
   animation-fill-mode: forwards;
   
   background-color: ${SECONDARY_BACKGROUND};
-  color: ${TEXT_COLOR};
   
   transition: background-color .2s ease-in;
   
@@ -131,18 +145,110 @@ export const NotificationItem = styled.div<NotificationsStylesProps>`
     margin: 0;
     
     font-size: 16px;
+    color: ${TEXT_COLOR};
   }
   
-  p {
+  p, ul {
     margin: 0;
     padding: 10px;
     padding-left: 15px;
     margin-bottom: 8px;
     font-size: 14px;
+    color: ${HINT_TEXT_COLOR};
+  }
+  
+  ul {
+    padding-left: 30px;
+  }
+  
+  li {
+    margin-bottom: 2px;
+    margin-top: 2px;
   }
   
   div {
     background-color: ${props => (props.isSuccess ? SUCCESS : ERROR)};
     height: 5px;
   }
+  
+  :hover {
+    cursor: pointer;
+    background-color: ${HOVER_BACKGROUND};
+  }
 `;
+
+export const SpinnerWrapper = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  
+  div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    margin: 4px;
+    border: 2px solid ${TEXT_COLOR};
+    border-radius: 50%;
+    animation: ${ldsRing} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: ${TEXT_COLOR} transparent transparent transparent;
+
+    :nth-child(1) {
+      animation-delay: -0.45s;
+    }
+
+    :nth-child(2) {
+      animation-delay: -0.3s;
+    }
+
+    :nth-child(3) {
+      animation-delay: -0.15s;
+    }
+  }
+`;
+
+export const PageLoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  width: 100px;
+  height: 100px;
+  
+  span {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    
+    width: 80px;
+    height: 80px;
+    
+    margin: 8px;
+    border: 2px solid ${ACTION_COLOR};
+    border-color: ${ACTION_COLOR} transparent ${ACTION_COLOR} transparent;
+    border-radius: 50%;
+    
+    animation: ${ldsRing} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  }
+
+  span:nth-child(1) {
+    width: 60px;
+    height: 60px;
+    animation-delay: -0.15s;
+  }
+
+  span:nth-child(2) {
+    width: 40px;
+    height: 40px;
+    animation-delay: -0.3s;
+  }
+
+  span:nth-child(3) {
+    width: 20px;
+    height: 20px;
+    animation-delay: -0.45s;
+  }
+`;
+
