@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import {useAppDispatch} from '../../redux/store';
 import {setAlert} from '../../redux/reducers/alert-reducer';
 import {getAuthIsFetching} from '../../redux/selectors/auth';
-import {authUser} from '../../redux/reducers/user-data-reducer';
+import {authUser} from '../../redux/reducers/auth-user-reducer';
 import {AuthFields, Endpoints, Methods, NotificationTypes} from '../../utils/constants';
 import {AppButton, AppGlassEffect, AppInputField, AppLink} from '../../common/styled/ui-components';
 

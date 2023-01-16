@@ -96,7 +96,14 @@ class UserService {
   };
 
   async getAllUsers() {
-   return await UserModel.find();
+    const users = await UserModel.find();
+    const formatUsersList = [];
+
+    for (let i = 0; i < users.length; i++) {
+      formatUsersList.push(users[i].email);
+    }
+
+    return {list: formatUsersList};
   };
 }
 

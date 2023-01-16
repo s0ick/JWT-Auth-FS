@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import {NotificationsStylesProps} from '../../types/ui-models';
 
-import {ldsRing, slideLeft, slideRight} from './animations';
+import {ldsRing, pulse, slideLeft, slideRight} from './animations';
 import {
   ACTION_COLOR,
   ACTION_HOVER_COLOR,
@@ -13,13 +13,18 @@ import {
   SECONDARY_BACKGROUND, HOVER_BACKGROUND
 } from './color-constants';
 
-export const AppPageWrapper = styled.div`
+export const AppPageWrapperFull = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   
   height: 100vh;
   position: relative;
+`;
+
+export const AppPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 export const AppGlassEffect = styled.div`
@@ -250,5 +255,38 @@ export const PageLoaderWrapper = styled.div`
     height: 20px;
     animation-delay: -0.45s;
   }
+`;
+
+export const animatedRectangle = styled.div`
+  display: block;
+  position: relative;
+  background: rgba(223, 229, 235, 0.2);
+  height: 14px;
+
+  &::after {
+    content: '';
+    background: linear-gradient(90deg, rgba(223, 229, 235, .2) 0%, rgba(223, 229, 235, .5) 55.91%, rgba(223, 229, 235, .2) 100%);
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    animation: 2s infinite ${pulse};
+  }
+`;
+
+export const TextLoaderBlock = styled.div`
+  margin: 24px 0;
+`;
+
+export const TextLoaderRow = styled(animatedRectangle)`
+  margin: 12px 0;
+  width: 100%;
+`;
+
+export const TextLoaderHeader = styled(animatedRectangle)`
+  margin-bottom: 4px;
+  width: 60%;
 `;
 

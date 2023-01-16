@@ -5,13 +5,15 @@ import Spline from '@splinetool/react-spline';
 import {useAppDispatch} from '../redux/store';
 import {getAlertData} from '../redux/selectors/alert';
 import {getIsDoneUserData} from '../redux/selectors/auth';
-import {authUser} from '../redux/reducers/user-data-reducer';
+import {authUser} from '../redux/reducers/auth-user-reducer';
 import {Endpoints, Methods, SPLINE_PATH} from '../utils/constants';
-import {AppPageWrapper, AppSplineContainer} from '../common/styled/ui-components';
+import {PageLoader} from '../common/ui-components/loadres/page-loader';
+import {AppPageWrapper, AppPageWrapperFull, AppSplineContainer} from '../common/styled/ui-components';
 import {useNotification} from '../common/ui-components/notifications/notifications-provider';
 
 import {AppForm} from './app-form/app-form';
-import {PageLoader} from '../common/ui-components/loadres/page-loader';
+import {AppNavbar} from './app-navbar/app-navbar';
+import {AppContent} from './app-content/app-content';
 
 export const AppPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -47,26 +49,27 @@ export const AppPage = () => {
 
   if (isLoading) {
     return (
-      <AppPageWrapper>
+      <AppPageWrapperFull>
         <PageLoader/>
-      </AppPageWrapper>
+      </AppPageWrapperFull>
     );
   }
 
   if (!isDone) {
     return (
-      <AppPageWrapper>
+      <AppPageWrapperFull>
         <AppForm/>
         <AppSplineContainer>
           <Spline scene={SPLINE_PATH}/>
         </AppSplineContainer>
-      </AppPageWrapper>
+      </AppPageWrapperFull>
     );
   }
 
   return (
-    <div>
-      {'Hello world'}
-    </div>
+    <AppPageWrapper>
+      <AppNavbar/>
+      <AppContent/>
+    </AppPageWrapper>
   );
 };

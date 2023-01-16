@@ -5,7 +5,7 @@ import {IDynamicBody} from '../../types/models';
 import {callAbortableApi} from '../../api/api';
 
 const userDataSlice = createSlice({
-  name: 'user-data-slice',
+  name: 'auth-user-slice',
   initialState: {
     isFetching: false,
     isDone: false,
@@ -46,4 +46,14 @@ export const authUser = (payload: IDynamicBody | undefined, endpoint: Endpoints,
   endpoint,
   payload,
   `${endpoint} User`
+);
+
+export const logout = () => callAbortableApi(
+  request,
+  undefined,
+  cancel,
+  Methods.POST,
+  Endpoints.LOGOUT,
+  undefined,
+  `${Endpoints.LOGOUT} User`
 );

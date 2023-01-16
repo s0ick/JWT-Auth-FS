@@ -67,9 +67,10 @@ const _handleAbortableRequestError = (
   }));
 };
 
+
 export const callAbortableApi = (
   requestActionCreator: () => AnyAction,
-  receiveActionCreator: (body: AxiosResponse) => AnyAction,
+  receiveActionCreator: ((body: AxiosResponse) => AnyAction) | undefined,
   abortActionCreator: () => AnyAction,
   method: string,
   endpoint: string,
@@ -100,7 +101,11 @@ export const callAbortableApi = (
       localStorage.setItem('token', accessToken);
     }
 
-    return dispatch(receiveActionCreator(payload));
+    if (receiveActionCreator) {
+      return dispatch(receiveActionCreator(payload));
+    } else {
+      dispatch(abortActionCreator());
+    }
   })
   .catch(e => _handleAbortableRequestError(e, dispatch, abortActionCreator));
 };

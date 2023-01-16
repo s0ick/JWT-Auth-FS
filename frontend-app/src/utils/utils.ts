@@ -19,4 +19,14 @@ export const formatErrorsArray = (errors: Array<IErrors>): Array<string> | strin
   const messages: Array<string> = [];
   errors.forEach(e => messages.push(e.msg));
   return messages;
+};
+
+export const range = (num: number) => {
+  let result = [];
+
+  for (let i = 0; i < num; i++) {
+    result.push(i);
+  }
+
+  return result;
 }

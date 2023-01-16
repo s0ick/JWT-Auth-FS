@@ -1,7 +1,17 @@
 export interface IUser {
   email: string;
-  isActivated: boolean;
+  isActivate: boolean;
   id: string;
+}
+
+export interface IUsersList {
+  list: Array<string>
+}
+
+export interface IUsers {
+  isFetching: boolean;
+  isDone: boolean;
+  payload: null | IUsersList;
 }
 
 export interface IAuthResponse {
